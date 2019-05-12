@@ -1,0 +1,36 @@
+# MyProject
+cmake_minimum_required(VERSION 3.2)
+project(MyProject)
+
+cmake_policy(SET CMP0074 NEW)
+
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/assign_source_group.cmake)
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc_add_pch.cmake)
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/msvc_set_win32.cmake)
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/copy_static_files.cmake)
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/path_find_in_list.cmake)
+
+SET(MY_PROJECT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+# avoiding dev and prod builds from now on
+if (MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNOMINMAX /D_USE_MATH_DEFINES /MP6 /std:c++latest")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /DNOMINMAX /D_USE_MATH_DEFINES /MP6")
+    foreach (flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if (NOT BUILD_SHARED_LIBS AND NOT gtest_force_shared_crt)
+            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+        endif()
+    endforeach()
+endif(MSVC)
+
+# --- 
+# This subfolder needs to run in compile time 
+add_subdirectory(thirdparty)
+add_subdirectory(src)
+
+# --- 
+add_subdirectory(tests)
+

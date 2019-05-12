@@ -1,0 +1,41 @@
+# MyLibrary
+Project(MyLibrary)
+
+file(GLOB_RECURSE SOURCE_FILES *.cpp *.c *.inc)
+file(GLOB_RECURSE HEADER_FILES *.h *.hpp *.inl)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# include_directories("${PROJECT_SOURCE_DIR}")
+# include_directories("${BASS_INCLUDE_DIR}")
+include_directories(${ASSIMP_INCLUDE_DIR})
+link_directories(${ASSIMP_LIBRARY_DIR})
+include_directories(${JSON_INCLUDE_DIR})
+include_directories(${BASS_INCLUDE_DIR})
+link_directories(${BASS_LIB_DIR})
+include_directories(${STB_INCLUDE_DIR})
+
+# include_directories("${STB_ROOT}/include")
+
+msvc_add_pch(stdafx.h stdafx.cpp "${SOURCE_FILES}")
+
+add_library(MyLibrary STATIC ${SOURCE_FILES} ${HEADER_FILES})
+# target_link_libraries(MyLibrary)
+target_link_libraries(MyLibrary PUBLIC ${ASSIMP_LIBRARY})
+target_link_libraries(MyLibrary PUBLIC ${BASS_LIBRARY})
+target_include_directories(MyLibrary PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_directories(MyLibrary PUBLIC "${ASSIMP_LIBRARY_DIR}")
+target_link_directories(MyLibrary PUBLIC "${BASS_LIBRARY_DIR}")
+
+# MSVC only
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Ob1")
+
+set_target_properties(MyLibrary PROPERTIES DEBUG_POSTFIX "d")
+
+assign_source_group(${SOURCE_FILES} ${HEADER_FILES})
+
+install(TARGETS MyLibrary DESTINATION lib)
+install(DIRECTORY / DESTINATION include FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY / DESTINATION include FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY / DESTINATION include FILES_MATCHING PATTERN "*.inl")
+
+add_dependencies(MyLibrary ExternalDependencies)
