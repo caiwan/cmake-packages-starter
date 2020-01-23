@@ -17,7 +17,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-option(test "Build all tests." OFF) # Makes boolean 'test' available.
+option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
 
 #set(MY_PROJECT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -39,17 +39,16 @@ if(MSVC)
 endif()
 
 # ---
-add_subdirectory(thirdparty)
+include("thirdparties.cmake")
 # ---
 
-# TODO: expand this
 # Add the main library ...
 add_subdirectory(src)
 # ... Then the executable
 
-
-
 # ---
-# TODO: If build tests
+
+if (BUILD_TESTS)
 add_subdirectory(tests)
+endif()
 # ---
