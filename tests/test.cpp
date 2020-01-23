@@ -1,32 +1,37 @@
 #include <gtest/gtest.h>
-#include "hello.h"
-#include "assimp.h"
-#include "bassplayer.h"
-#include "bullet.h"
-#include "stb.h"
-#include "json.h"
+#include <MyLibrary/hello.h>
+#include <MyLibrary/assimp.h>
+#include <MyLibrary/stb.h>
+#include <MyLibrary/json.h>
+#include <MyLibrary/HelloLogger.h>
 
-TEST(Test, hello) {
-	HelloWorld test;
-	ASSERT_EQ(5, test.add(2, 3));
+TEST(SampleTest, HelloWorldTest)
+{
+  HelloWorld test;
+  ASSERT_EQ(5, test.Add(2, 3));
 }
 
-TEST(Test, assimp) {
-	AssimpTest test;
-	test.doImport();
+TEST(SampleTest, assimp)
+{
+  AssimpTest test;
+  test.DoImport("assets/cube.obj");
+  test.DoImport("assets/cube.ply");
 }
 
-TEST(Test, json) {
-	JsonTest test;
-	test.helloJson();
+TEST(SampleTest, json)
+{
+  JsonTest test;
+  test.helloJson("assets/test.json");
 }
 
-TEST(Test, stb) {
-	StbTest test;
-	test.stb();
+TEST(SampleTest, stb)
+{
+  StbTest test;
+  test.Stb();
 }
 
-TEST(Test, bass) {
-	BassTest test;
-	test.bass();
+TEST(SampleTest, spdlog)
+{
+  HelloLogger test;
+  test.SayHello();
 }

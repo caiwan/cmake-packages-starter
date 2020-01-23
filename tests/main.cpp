@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include <gtest/gtest.h>
 
 using ::testing::EmptyTestEventListener;
@@ -11,7 +10,7 @@ using ::testing::TestPartResult;
 using ::testing::UnitTest;
 
 int main(int argc, char **argv) {
-	InitGoogleTest(&argc, argv);
-	int res = RUN_ALL_TESTS();
-	return res;
+  InitGoogleTest(&argc, argv);
+  const int res = RUN_ALL_TESTS();
+  return res;
 }
