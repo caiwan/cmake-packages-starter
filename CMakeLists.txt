@@ -38,6 +38,8 @@ if(MSVC)
   endforeach()
 endif()
 
+add_custom_target(uninstall)
+
 # ---
 include("thirdparties.cmake")
 # ---

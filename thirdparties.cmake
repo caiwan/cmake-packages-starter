@@ -13,6 +13,7 @@ CPMAddPackage(
   VERSION 4.1.0
   OPTIONS
   "ASSIMP_BUILD_TESTS OFF"
+  "ASSIMP_BUILD_ASSIMP_TOOLS OFF"
 )
 
 if (NOT Assimp_ADDED)
@@ -22,7 +23,6 @@ endif ()
 # TODO: Add binary paths to a variable
 # set(ASSIMP_BINARIES ... )
 message("Assimp_BINARY_DIR = ${Assimp_BINARY_DIR}")
-
 
 # --------------------------------------------------------------------------------
 # --- Bulet
@@ -95,10 +95,6 @@ CPMAddPackage(
   VERSION 1.4.2
 )
 
-if (NOT spdlog_ADDED)
-  message(FATAL_ERROR "spdlog could not be added")
-endif ()
-
 # --------------------------------------------------------------------------------
 # --- cxxopts
 
@@ -161,24 +157,14 @@ CPMAddPackage(
   NAME stb
   GIT_TAG f67165c2bb2af3060ecae7d20d6f731173485ad0
   GITHUB_REPOSITORY nothings/stb
+  DOWNLOAD_ONLY YES
 )
 
 if (stb_ADDED)
-  file(GLOB STB_SOURCE_FILES
-    ${stb_SOURCE_DIR}/*.cpp
-    ${stb_SOURCE_DIR}/*.c
-    ${stb_SOURCE_DIR}/*.inc
-    )
-
-  file(GLOB STB_HEADER_FILES
-    ${stb_SOURCE_DIR}/*.h
-    ${stb_SOURCE_DIR}/*.hpp
-    ${stb_SOURCE_DIR}/*.inl
-    )
-
-  #No test build, no need for external data, etc.
-  add_library(stb STATIC ${STB_SOURCE_FILES} ${STB_HEADER_FILES})
-  target_include_directories(stb PUBLIC ${stb_SOURCE_DIR})
+  # Headers only, Excl. vorbis
+  # No test build, no need for external data, etc.
+  add_library(stb INTERFACE)
+  target_include_directories(stb INTERFACE ${stb_SOURCE_DIR})
 
 else ()
   message(FATAL_ERROR "stb could not be added")
@@ -187,29 +173,34 @@ endif ()
 # --------------------------------------------------------------------------------
 # --- Bass
 
-CPMAddPackage(
-  NAME bass
-  VERSION 3.6.1
-  # not using the repo as it takes forever to clone
-  URL http://www.un4seen.com/files/bass24.zip
-  # URL_HASH SHA256=69cc88207ce91347ea530b227ff0776db82dcb8de6704e1a3d74f4841bc651cf
-)
+if (WIN32)
+  CPMAddPackage(
+    NAME bass
+    VERSION 3.6.1
+    # not using the repo as it takes forever to clone
+    URL http://www.un4seen.com/files/bass24.zip
+    # TODO Fix hash
+    # URL_HASH SHA256=69cc88207ce91347ea530b227ff0776db82dcb8de6704e1a3d74f4841bc651cf
+    DOWNLOAD_ONLY YES
+  )
 
-if (bass_ADDED)
-  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(BASS_ARCHITECTURE "x64")
-  elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(BASS_ARCHITECTURE "")
-  endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
+  if (bass_ADDED)
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set(BASS_ARCHITECTURE "x64")
+    elseif (CMAKE_SIZEOF_VOID_P EQUAL 4)
+      set(BASS_ARCHITECTURE "")
+    endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
-  add_library(bass INTERFACE)
-  target_include_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
-  target_link_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
+    add_library(bass INTERFACE)
+    target_include_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
+    target_link_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
 
-  set(BASS_BINARIES "${bass_SOURCE_DIR}/${BASS_ARCHITECTURE}/bass.dll")
+    set(BASS_BINARIES "${bass_SOURCE_DIR}/${BASS_ARCHITECTURE}/bass.dll")
 
-else ()
-  message(FATAL_ERROR "bass could not be added")
+  else ()
+    message(FATAL_ERROR "bass could not be added")
+  endif ()
+
 endif ()
 
 # --------------------------------------------------------------------------------
@@ -218,12 +209,18 @@ endif ()
 add_custom_target(ExternalDependencies)
 add_dependencies(ExternalDependencies
   assimp
-  #    bass
-#  bullet
+  #      bass
+  #  bullet
   nlohmann_json
   spdlog
-  #stb
+  stb
   )
+
+if (WIN32)
+  add_dependencies(ExternalDependencies
+    bass
+    )
+endif ()
 
 if (BUILD_TESTS)
   add_dependencies(ExternalDependencies
