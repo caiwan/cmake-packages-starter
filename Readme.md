@@ -11,6 +11,14 @@ Uses [CPM.cmake](https://github.com/TheLartians/CPM.cmake)
 - Sample for pure CMake project `Assimp` as external dependency
 - Sample for non-CMake single-header library `stb` as external dependency
 
+---
+- https://github.com/oracle2025/cppcheck-cmake-example
+    - https://github.com/danmar/cppcheck/blob/master/tools/git-pre-commit-cppcheck
+    - https://github.com/kbenzie/git-cmake-format
+    - https://stackoverflow.com/questions/40325957/how-do-i-add-valgrind-tests-to-my-cmake-test-target
+    - syntastic/linters.vim
+
+
 ## Usage 
 
 Configure project

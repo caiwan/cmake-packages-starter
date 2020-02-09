@@ -1,38 +1,48 @@
-include(assign_source_group)
+include(project_warnings)
 
-set(_library MyLibrary)
-set(_lib_root ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary)
+include(AssignSourceGroup)
 
 file(GLOB_RECURSE SOURCE_FILES
-  ${_lib_root}/*.cpp
-  ${_lib_root}/*.c
-  ${_lib_root}/*.inc
-  )
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.inc
+    )
 
 file(GLOB_RECURSE HEADER_FILES
-  ${_lib_root}/*.h
-  ${_lib_root}/*.hpp
-  ${_lib_root}/*.inl
-  )
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MyLibrary/*.inl
+    )
 
-add_library(${_library} STATIC ${SOURCE_FILES} ${HEADER_FILES})
-target_link_directories(${_library} PUBLIC ${SPDLOG_LIB_DIR} ${ASSIMP_LIB_DIR})
-target_link_libraries(${_library} PUBLIC ${SPDLOG_INCLUDE} ${ASSIMP_LIBRARY})
-target_include_directories(${_library} INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PUBLIC ${STB_INCLUDE_DIR} ${JSON_INCLUDE_DIR})
+add_library(MyLibrary STATIC ${SOURCE_FILES} ${HEADER_FILES})
+
+target_link_libraries(MyLibrary
+    PRIVATE
+    cxxopts
+    nlohmann_json
+    sol2
+    spdlog
+    stb
+    assimp
+    PRIVATE project_warnings
+    )
+
+target_include_directories(MyLibrary INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PUBLIC ${STB_INCLUDE_DIR} ${JSON_INCLUDE_DIR})
 
 if (MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Ob1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Ob1")
 endif (MSVC)
 
-set_target_properties(${_library} PROPERTIES DEBUG_POSTFIX "d")
+set_target_properties(MyLibrary PROPERTIES DEBUG_POSTFIX "d")
 
 assign_source_group(${SOURCE_FILES} ${HEADER_FILES})
 
-install(TARGETS ${_library} DESTINATION lib)
+install(TARGETS MyLibrary DESTINATION lib)
 install(DIRECTORY ${_lib_root}/ DESTINATION include/${_lib_root} FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY ${_lib_root}/ DESTINATION include/${_lib_root} FILES_MATCHING PATTERN "*.hpp")
 install(DIRECTORY ${_lib_root}/ DESTINATION include/${_lib_root} FILES_MATCHING PATTERN "*.inl")
 
-add_dependencies(${_library} ExternalDependencies)
+add_dependencies(MyLibrary ExternalDependencies)
 
 add_subdirectory(MyExecutable)
+

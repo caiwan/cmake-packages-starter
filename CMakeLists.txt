@@ -2,41 +2,42 @@
 cmake_minimum_required(VERSION 3.15)
 project(MyProject VERSION 0.1.0)
 
-cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0074 NEW) # Using <PackageName>_ROOT varialbes when calling find_package()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "")
-set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH} )
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/deploy" CACHE PATH "default install path" FORCE )
-endif()
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/deploy" CACHE PATH "default install path" FORCE)
+endif ()
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
-endif()
+endif ()
 
-option(BUILD_TESTS "Build all tests." OFF) # Makes boolean 'test' available.
-
-#set(MY_PROJECT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
+option(BUILD_TESTS "Build all tests." ON)
+option(BUILD_BENCHMARKS "Build all bechmarks. Requires BUILD_TESTS set." ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # force static runtime libraries for msvc builds
-if(MSVC)
+if (MSVC)
   set(_flag_variables
     CMAKE_CXX_FLAGS_DEBUG
     CMAKE_CXX_FLAGS_RELEASE
     CMAKE_CXX_FLAGS_RELWITHDEBINFO
     CMAKE_CXX_FLAGS_MINSIZEREL
-  )
-  foreach(_flag_variable ${_flag_variables})
+    )
+  foreach (_flag_variable ${_flag_variables})
     string(REGEX REPLACE "/MT" "/MD" ${_flag_variable} "${${_flag_variable}}")
-  endforeach()
-endif()
+  endforeach ()
+endif ()
 
 add_custom_target(uninstall)
 
@@ -51,6 +52,6 @@ add_subdirectory(src)
 # ---
 
 if (BUILD_TESTS)
-add_subdirectory(tests)
-endif()
+  add_subdirectory(tests)
+endif ()
 # ---

@@ -3,7 +3,7 @@ root = true
 [*]
 charset = utf-8
 indent_style = space
-indent_size = 2
+indent_size = 4
 end_of_line = crlf
 insert_final_newline = true
 trim_trailing_whitespace = true
@@ -12,21 +12,21 @@ trim_trailing_whitespace = true
 indent_size = 4
 
 [*.{c,cpp,h,hpp,inc,inl}]
-indent_size = 2
+indent_size = 4
 indent_style = space
 
 [*.json]
 indent_size = 2
-indent_style = space
+indent_style = tab
 
 [*.{xml,qrc}]
 indent_size = 2
-indent_style = space
+indent_style = tab
 
 [CmakeLists.txt]
-indent_size = 2
+indent_size = 4
 indent_style = space
 
 [*.cmake]
-indent_size = 2
+indent_size = 4
 indent_style = space

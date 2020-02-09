@@ -1,5 +1,7 @@
 # Third party packages
 
+include(project_warnings)
+
 # https://github.com/TheLartians/CPM.cmake
 include(CPM)
 
@@ -95,6 +97,10 @@ CPMAddPackage(
   VERSION 1.4.2
 )
 
+if (NOT spdlog_ADDED)
+  message(FATAL_ERROR "spdlog could not be added")
+endif ()
+
 # --------------------------------------------------------------------------------
 # --- cxxopts
 
@@ -146,6 +152,25 @@ if (BUILD_TESTS)
 
   if (NOT googletest_ADDED)
     message(FATAL_ERROR "googletest could not be added")
+  endif ()
+
+endif ()
+
+# --------------------------------------------------------------------------------
+# --- benchmark
+
+if (BUILD_TESTS AND BUILD_BENCHMARKS)
+  CPMAddPackage(
+    NAME benchmark
+    GITHUB_REPOSITORY google/benchmark
+    VERSION 1.5.0
+    OPTIONS
+    "BENCHMARK_ENABLE_TESTING Off"
+  )
+
+  if (benchmark_ADDED)
+    # patch google benchmark target
+    set_target_properties(benchmark PROPERTIES CXX_STANDARD 17)
   endif ()
 
 endif ()
@@ -209,8 +234,9 @@ endif ()
 add_custom_target(ExternalDependencies)
 add_dependencies(ExternalDependencies
   assimp
-  #      bass
-  #  bullet
+  cxxopts
+  sol2
+  # TODO Add Bullet
   nlohmann_json
   spdlog
   stb
@@ -224,8 +250,17 @@ endif ()
 
 if (BUILD_TESTS)
   add_dependencies(ExternalDependencies
-    googletest
+    gtest gmock
     )
+
+  if (BUILD_BENCHMARKS)
+    add_dependencies(ExternalDependencies
+      benchmark
+      )
+  endif ()
+
 endif ()
 
+# TODO Hide targets
+#set_target_properties(assimp PROPERTIES FOLDER ExternalProjectTargets)
 set_target_properties(ExternalDependencies PROPERTIES FOLDER ExternalProjectTargets)

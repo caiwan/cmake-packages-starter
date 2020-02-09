@@ -145,6 +145,8 @@ function(recurse_copy_static_files)
         continue()
       elseif ("${_file_name}" MATCHES ".*\\.(git*)\\s?")
         continue()
+      elseif ("${_file_name}" MATCHES ".*\\.(md5)\\s?")
+        continue()
       endif ()
 
       copy_static_files(

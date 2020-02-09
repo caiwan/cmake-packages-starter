@@ -1,49 +1,64 @@
+include(project_warnings)
+
 enable_testing()
 
 include(GoogleTest)
 include("deploy_tests.cmake")
 
-set(_test UnitTests)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-file(GLOB_RECURSE SOURCE_FILES *.cpp *.c)
-file(GLOB_RECURSE HEADER_FILES *.hpp *.h *.hh)
+file(GLOB_RECURSE SOURCE_FILES unittests/*.cpp unittests/*.c)
+file(GLOB_RECURSE HEADER_FILES unittests/*.hpp unittests/*.h unittests/*.hh)
 
-add_executable(${_test} EXCLUDE_FROM_ALL ${SOURCE_FILES} ${HEADER_FILES})
+add_executable(UnitTests EXCLUDE_FROM_ALL ${SOURCE_FILES} ${HEADER_FILES})
 
-target_include_directories(${_test} PUBLIC
-  ${SPDLOG_INCLUDE_DIR}
-  ${GTEST_INCLUDE_DIR}
-)
+target_link_libraries(UnitTests PRIVATE
+    MyLibrary
+    gmock gtest
+    spdlog
+    Threads::Threads
+    PRIVATE project_warnings
+    )
+#
+set_target_properties(UnitTests PROPERTIES FOLDER tests)
 
-target_link_directories(${_test} PUBLIC
-  ${GTEST_LIB_DIR}
-  ${SPDLOG_LIB_DIR}
-  )
+# gtest_add_tests(TARGET UnitTests WORKING_DIRECTORY ${TEST_DEPLOY_DIR} TEST_PREFIX old: TEST_EXECUTOR CTest)
+# gtest_discover_tests(UnitTests WORKING_DIRECTORY ${TEST_DEPLOY_DIR} TEST_PREFIX new: TEST_EXECUTOR CTest)
 
-target_link_libraries(${_test}
-  MyLibrary
-  #  googletest
-  ${GTEST_LIBRARIES}
-  #  spdlog
-  ${SPDLOG_LIBRARIES}
-  Threads::Threads
-  )
+#if (MSVC)
+#  set_target_properties(UnitTests PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${TEST_DEPLOY_DIR}")
+#  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /DGTEST_LINKED_AS_SHARED_LIBRARY=1")
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DGTEST_LINKED_AS_SHARED_LIBRARY=1")
+#endif (MSVC)
+#
+add_test(NAME Tests COMMAND UnitTests WORKING_DIRECTORY ${TEST_DEPLOY_DIR})
 
+add_dependencies(UnitTests DeployTests)
 
-set_target_properties(${_test} PROPERTIES FOLDER tests)
+# ----
 
-# gtest_add_tests(TARGET ${_test} WORKING_DIRECTORY ${TEST_DEPLOY_DIR} TEST_PREFIX old: TEST_EXECUTOR CTest)
-# gtest_discover_tests(${_test} WORKING_DIRECTORY ${TEST_DEPLOY_DIR} TEST_PREFIX new: TEST_EXECUTOR CTest)
+if (BUILD_BENCHMARKS)
 
-if (MSVC)
-  set_target_properties(${_test} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${TEST_DEPLOY_DIR}")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /DGTEST_LINKED_AS_SHARED_LIBRARY=1")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DGTEST_LINKED_AS_SHARED_LIBRARY=1")
-endif (MSVC)
+    file(GLOB_RECURSE SOURCE_FILES unittests/*.cpp unittests/*.c)
+    file(GLOB_RECURSE HEADER_FILES unittests/*.hpp unittests/*.h unittests/*.hh)
 
-add_test(NAME Tests COMMAND ${_test} WORKING_DIRECTORY ${TEST_DEPLOY_DIR})
+    add_executable(Benchmarks EXCLUDE_FROM_ALL ${SOURCE_FILES} ${HEADER_FILES})
 
-add_dependencies(${_test} DeployTests)
+    target_link_libraries(Benchmarks PRIVATE
+        MyLibrary
+        benchmark
+        spdlog
+        Threads::Threads
+        PRIVATE project_warnings
+        )
+    #
+    set_target_properties(Benchmarks PROPERTIES FOLDER tests)
+
+    add_dependencies(Benchmarks DeployTests)
+
+    #  if (MSVC)
+    #    set_target_properties(Benchmarks PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${TEST_DEPLOY_DIR}")
+    #  endif ()
+
+endif ()
