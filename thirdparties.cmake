@@ -8,6 +8,8 @@ include(CPM)
 # --------------------------------------------------------------------------------
 # --- Assimp
 
+# TODO Turn off warnings
+
 CPMAddPackage(
   NAME Assimp
   GITHUB_REPOSITORY assimp/assimp
