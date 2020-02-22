@@ -250,6 +250,10 @@ if (WIN32)
 
     set(BASS_BINARIES "${bass_SOURCE_DIR}/${BASS_ARCHITECTURE}/bass.dll")
 
+    message("INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
+    message("LINK ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
+    message("BINARY ${BASS_BINARIES}")
+
   else ()
     message(FATAL_ERROR "bass could not be added")
   endif ()

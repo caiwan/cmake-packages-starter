@@ -18,7 +18,7 @@ add_library(MyLibrary STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(MyLibrary
     PUBLIC nlohmann_json
-    PRIVATE cxxopts sol2 spdlog stb ${ASSIMP_LIBRARIES}
+    PRIVATE cxxopts sol2 spdlog stb ${ASSIMP_LIBRARIES} bass
     PRIVATE project_warnings
     )
 
