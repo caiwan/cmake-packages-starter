@@ -22,13 +22,32 @@ CPMAddPackage(
   "ASSIMP_BUILD_ASSIMP_TOOLS OFF"
 )
 
-if (NOT Assimp_ADDED)
+if (Assimp_ADDED)
+    # Patch assimp
+    # TODO: Add binary paths to a variable
+    # set(ASSIMP_BINARIES ... )
+    set(ASSIMP_INCLUDE_DIRS ${Assimp_SOURCE_DIR}/include ${Assimp_BINARY_DIR}/include)
+    if (WIN32 AND MSVC)
+
+        if(MSVC_VERSION GREATER_EQUAL 1800 )
+            set(ASSIMP_MSVC_VERSION "vc120")
+        elseif(MSVC_VERSION GREATER_EQUAL 1900)
+            set(ASSIMP_MSVC_VERSION "vc140")
+        endif() # TODO: Add version 1910 and 1920 https://cmake.org/cmake/help/latest/variable/MSVC_VERSION.html#variable:MSVC_VERSION
+
+        # set(ASSIMP_LIBRARIES ${CMAKE_BINARY_DIR}/lib/$<CONFIGURATION>/$<TARGET_LINKER_FILE_NAME:assimp>)
+        # set(ASSIMP_BINARIES ${CMAKE_BINARY_DIR}/lib/$<CONFIGURATION>/$<TARGET_LINKER_FILE_NAME:assimp>)
+        set(ASSIMP_BINARIES $<TARGET_FILE:assimp>)
+        set(ASSIMP_LIBRARIES $<TARGET_LINKER_FILE:assimp>)
+    else()
+        message(FATAL_ERROR "Cannot add Assimp")
+    endif()
+    message("Assimp_BINARY_DIR = ${Assimp_BINARY_DIR}")
+else ()
   message(FATAL_ERROR "Assimp could not be added")
 endif ()
 
-# TODO: Add binary paths to a variable
-# set(ASSIMP_BINARIES ... )
-message("Assimp_BINARY_DIR = ${Assimp_BINARY_DIR}")
+
 
 # --------------------------------------------------------------------------------
 # --- Bulet

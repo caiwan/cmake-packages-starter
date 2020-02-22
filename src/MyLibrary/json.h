@@ -1,11 +1,13 @@
 #pragma once
-#include<nlohmann/json.hpp>
+#include <nlohmann/json.hpp>
 
 using Json = nlohmann::json;
 
-class JsonTest {
+class JsonTest
+{
 public:
-  int helloJson(const char string[17]);
+    int helloJson(const char string[17]);
+
 private:
-	Json json;
+    Json json;
 };

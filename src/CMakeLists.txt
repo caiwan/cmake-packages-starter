@@ -17,17 +17,12 @@ file(GLOB_RECURSE HEADER_FILES
 add_library(MyLibrary STATIC ${SOURCE_FILES} ${HEADER_FILES})
 
 target_link_libraries(MyLibrary
-    PRIVATE
-    cxxopts
-    nlohmann_json
-    sol2
-    spdlog
-    stb
-    assimp
+    PUBLIC nlohmann_json
+    PRIVATE cxxopts sol2 spdlog stb ${ASSIMP_LIBRARIES}
     PRIVATE project_warnings
     )
 
-target_include_directories(MyLibrary INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PUBLIC ${STB_INCLUDE_DIR} ${JSON_INCLUDE_DIR})
+target_include_directories(MyLibrary INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PRIVATE ${ASSIMP_INCLUDE_DIRS})
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /Ob1")
