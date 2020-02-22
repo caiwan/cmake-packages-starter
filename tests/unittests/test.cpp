@@ -3,6 +3,7 @@
 #include <MyLibrary/assimp.h>
 #include <MyLibrary/stb.h>
 #include <MyLibrary/json.h>
+#include <MyLibrary/sol2.h>
 #include <MyLibrary/HelloLogger.h>
 
 TEST(SampleTest, HelloWorldTest)
@@ -34,4 +35,10 @@ TEST(SampleTest, spdlog)
 {
   HelloLogger test;
   test.SayHello();
+}
+
+TEST(SampleTest, sol2)
+{
+    HelloSol2 test;
+    ASSERT_TRUE(test.HelloFromLua());
 }

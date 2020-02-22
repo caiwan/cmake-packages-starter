@@ -1,9 +1,7 @@
 #pragma once
 
-class HelloLogger {
-public :
-void SayHello();
+class HelloLogger
+{
+public:
+    void SayHello();
 };
-
-
-

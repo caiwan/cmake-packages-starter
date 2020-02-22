@@ -1,6 +1,7 @@
-#pragma once 
+#pragma once
 
-class StbTest {
+class StbTest
+{
 public:
-	int	Stb();
+    int Stb();
 };

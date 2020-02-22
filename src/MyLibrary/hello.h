@@ -1,6 +1,7 @@
 #pragma once
 
-class HelloWorld {
+class HelloWorld
+{
 public:
-	int Add(int a, int b);
+    int Add(int a, int b);
 };

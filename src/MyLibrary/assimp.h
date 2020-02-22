@@ -1,7 +1,7 @@
 #pragma once
 
-class AssimpTest{
+class AssimpTest
+{
 public:
-	int DoImport(const char * filename);
+    int DoImport(const char * filename);
 };
-
