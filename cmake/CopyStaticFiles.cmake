@@ -3,6 +3,8 @@
 
 include(CMakeParseArguments)
 
+# TODO: Make it work w/ compiler generator
+
 # Copies static files within the binary dirs
 # Usage:
 # TARGET cmake target

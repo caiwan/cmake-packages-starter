@@ -40,4 +40,3 @@ install(DIRECTORY ${_lib_root}/ DESTINATION include/${_lib_root} FILES_MATCHING 
 add_dependencies(MyLibrary ExternalDependencies)
 
 add_subdirectory(MyExecutable)
-

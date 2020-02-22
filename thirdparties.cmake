@@ -173,7 +173,9 @@ if (BUILD_TESTS)
     "gtest_force_shared_crt ON"
   )
 
-  if (NOT googletest_ADDED)
+  if (googletest_ADDED)
+    set(GTEST_BINARIES $<TARGET_FILE:gtest> $<TARGET_FILE:gmock>)
+  else()
     message(FATAL_ERROR "googletest could not be added")
   endif ()
 
@@ -194,6 +196,9 @@ if (BUILD_TESTS AND BUILD_BENCHMARKS)
   if (benchmark_ADDED)
     # patch google benchmark target
     set_target_properties(benchmark PROPERTIES CXX_STANDARD 17)
+    set(BENCHMARK_BINARIES $<TARGET_FILE:benchmark>)
+  else()
+    message(FATAL_ERROR "googletest could not be added")
   endif ()
 
 endif ()
