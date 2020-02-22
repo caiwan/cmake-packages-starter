@@ -2,6 +2,8 @@
 
 include(project_warnings)
 
+
+
 # https://github.com/TheLartians/CPM.cmake
 include(CPM)
 
@@ -263,6 +265,26 @@ if (BUILD_TESTS)
 
 endif ()
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 # TODO Hide targets
-#set_target_properties(assimp PROPERTIES FOLDER ExternalProjectTargets)
+
+set (_external_targets
+    assimp IrrXML zlib zlibstatic UpdateAssimpLibsDebugSymbolsAndDLLs
+    spdlog
+    lua
+    gtest gtest_main gmock gmock_main
+    benchmark benchmark_main
+    Bullet2FileLoader Bullet3Collision Bullet3Common Bullet3Dynamics
+    Bullet3Geometry Bullet3OpenCL_clew BulletCollision BulletDynamics BulletInverseDynamics
+    BulletSoftBody LinearMath
+)
+
+foreach(_var IN ITEMS ${_external_targets})
+    set_target_properties(${_var} PROPERTIES FOLDER ExternalProjectTargets)
+endforeach()
+
+
 set_target_properties(ExternalDependencies PROPERTIES FOLDER ExternalProjectTargets)
+
+
