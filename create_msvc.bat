@@ -11,7 +11,7 @@ if not exist msvc md msvc
 if exist msvc\CMakeCache.txt del msvc\CMakeCache.txt
 
 FOR /F "tokens=* USEBACKQ" %%F IN (`git describe`) DO ( SET git_describe=%%F )
-echo "GIT TOKENS = %git_describe%"
+echo GIT TOKENS = %git_describe%
 
 cd msvc
 cmake -DCMAKE_PREFIX_PATH=%CMAKE_PREFIX_PATH%;%QT5_DIR% -DCMAKE_INSTALL_PREFIX=../deploy/%git_describe% -DCMAKE_GENERATOR_PLATFORM=x64 ../

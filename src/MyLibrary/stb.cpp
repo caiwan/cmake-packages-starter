@@ -1,4 +1,8 @@
+#include"platform.h"
+
 #include "stb.h"
+
+DISABLE_WARNING_ALL
 
 // All the STB incluides w/ implementation definition
 #define STB_DEFINE
@@ -54,6 +58,8 @@
 // Not quiute portable ATM, tied to opengl :(
 //#include<stb_voxel_render.h>
 #include <stretchy_buffer.h>
+
+DISABLE_WARNING_POP
 
 int StbTest::Stb()
 {

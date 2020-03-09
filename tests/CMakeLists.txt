@@ -63,7 +63,7 @@ if (BUILD_BENCHMARKS)
         Threads::Threads
         PRIVATE project_warnings
         )
-    #
+
     set_target_properties(Benchmarks PROPERTIES FOLDER tests)
 
     add_dependencies(Benchmarks DeployTests)

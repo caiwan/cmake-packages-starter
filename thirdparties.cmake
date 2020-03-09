@@ -15,8 +15,8 @@ include(CPM)
 CPMAddPackage(
   NAME Assimp
   GITHUB_REPOSITORY assimp/assimp
-  GIT_TAG v4.1.0
-  VERSION 4.1.0
+  GIT_TAG v5.0.0
+  VERSION 5.0.0
   OPTIONS
   "ASSIMP_BUILD_TESTS OFF"
   "ASSIMP_BUILD_ASSIMP_TOOLS OFF"
@@ -24,7 +24,7 @@ CPMAddPackage(
 
 if (Assimp_ADDED)
     # Patch assimp
-    # TODO: Add binary paths to a variable
+    # TODO: This part only needed when build with MSVC2017
     # set(ASSIMP_BINARIES ... )
     set(ASSIMP_INCLUDE_DIRS ${Assimp_SOURCE_DIR}/include ${Assimp_BINARY_DIR}/include)
     if (WIN32 AND MSVC)
@@ -245,14 +245,14 @@ if (WIN32)
     endif (CMAKE_SIZEOF_VOID_P EQUAL 8)
 
     add_library(bass INTERFACE)
-    target_include_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
+    target_include_directories(bass INTERFACE ${bass_SOURCE_DIR}/c)
     target_link_directories(bass INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE})
 
     set(BASS_BINARIES "${bass_SOURCE_DIR}/${BASS_ARCHITECTURE}/bass.dll")
 
-    message("INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
-    message("LINK ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
-    message("BINARY ${BASS_BINARIES}")
+    #    message("----- INTERFACE ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
+    #    message("----- LINK ${bass_SOURCE_DIR}/c/${BASS_ARCHITECTURE}")
+    #    message("----- BINARY ${BASS_BINARIES}")
 
   else ()
     message(FATAL_ERROR "bass could not be added")
